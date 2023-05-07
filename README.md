@@ -6,11 +6,25 @@ Claude Lite - 与Claude互动的愉快方式 🎉🤖
 使用命令行与Slack上的Claude互动
 保存和加载会话ID
 只需要"SLACK_USER_TOKEN"、"channel_id" 和 "claude_id"
+
 # 详细注释 📚
-我们在代码中加入了很多详细的注释，你可以轻松阅读和了解每个功能和实现方法。请在使用过程中查看注释，深入了解项目。
+记得首先查看一下[帮助文件](https://github.com/BlackPinkiller/Claude-Lite/blob/main/Claude%E6%95%99%E7%A8%8B%EF%BC%88%E5%BF%85%E8%AF%BB%EF%BC%81%EF%BC%89.pdf)<br>
+代码中也有很多详细的注释，你也可以轻松阅读和了解每个功能和实现方法。请在使用过程中查看注释，深入了解项目。
+
+# 预览
+[History]列出已保存的会话列表<br>
+<img width="470" alt="history" src="https://user-images.githubusercontent.com/106259454/236685804-2f5c32b3-c2d8-422f-a08b-cbf46c4b37af.png">
+
+[Load]也会显示对话历史<br>
+<img width="517" alt="load" src="https://user-images.githubusercontent.com/106259454/236685743-37405ec6-e376-49a3-8e51-30b6472f527d.png">
+
+[Help]指令查看帮助<br>
+<img width="481" alt="help" src="https://user-images.githubusercontent.com/106259454/236685843-d5e501a7-cabd-462e-bec9-a060f31de4e9.png">
 
 # 未来计划 🚀
 计划加入预设功能，让用户能够更方便地自定义Claude Lite的交互体验。
+
+
 
 
 # Claude Lite Bot - A Fun Way to Interact with Claude 🎉🤖
