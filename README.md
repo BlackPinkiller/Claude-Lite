@@ -1,6 +1,8 @@
 # Claude-Lite
-Claude Lite - 与Claude互动的愉快方式 🎉🤖
-欢迎来到Claude Lite项目！我们的目标是为用户提供一个简单易用的命令行界面，使得与Slack上的Claude互动更加轻松愉快。
+欢迎来到Claude Lite项目！我提供一个简单易用的命令行界面，使得与Slack上的Claude互动轻松愉快复古。<br>
+
+只是简单实现了Claude in Slack在Slack频道中的多个独立对话的功能。<br>
+cmd对话最初只是我测试时候使用的，后来发现蛮有意思的就多写了一点点，希望会有人喜欢😊。
 
 # 主要功能 💡
 使用命令行与Slack上的Claude互动
