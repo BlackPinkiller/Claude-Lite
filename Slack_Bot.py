@@ -7,19 +7,19 @@ from slack_sdk.errors import SlackClientError
 from slack_sdk.errors import SlackRequestError
 
 # 在[Slack App]->[OAuth & Permissions]->[User OAuth Token] (xoxp-...)中找到令牌
-SLACK_USER_TOKEN = "xoxp-5125030454129-5097862626087-5112805795925-64797889d79cb32eb0042cf49ef07e88"
+SLACK_USER_TOKEN = "0000-0000000000000-0000000000000-0000000000000-00000000000000000000000000000000"
 
 # channel_id在频道URL中找到，例如https://app.slack.com/client/T000000000/C0533PLC7V4 中的C0533PLC7V4
 # 只需要打开你想要发送消息的频道，然后在地址栏中找到
 # 必须填写正确的channel_id，否则无法使用
-channel_id = "C0533PLC7V4"
+channel_id = "C0000000000"
 
 # claude_id可以在 View App Details（查看应用详情） 中的 Member ID （成员 ID） 中找到
 # 本ID是Slack内部使用的ID，不是Slack用户名或bot ID，不要混淆
 # 本ID是用来标识Claude回复的消息的，如果不使用本ID，不太容易区分Claude的回复和我们用来发送消息的Bot的回复
 # 并且，如果假设在消息列中有实时在线的用户的回复，有ID就可以辨认出来
 # 因此也建议用一个专用的Slack工作区，不要和其他用户使用的混在一起
-claude_id = "U0537DSKGF7"
+claude_id = "U000000000"
 
 # 观察中发现如果在Claude回复后还处在Typing状态， 那么这时候发送消息， Claude的反应会受影响
 # 角色扮演的影响非常大， 所以默认开启
