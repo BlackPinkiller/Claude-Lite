@@ -351,10 +351,12 @@ def _get_filepath():
     return file_path
 
 def get_txt_files_in_directory():
+    import sys
     # 获取当前文件的绝对路径
-    current_file_path = os.path.abspath(__file__)
-    current_directory = os.path.dirname(current_file_path)
-    presets_folder_path = os.path.join(current_directory, 'presets')
+    # 获取 exe 文件所在目录的绝对路径
+    exe_path = sys.argv[0]
+    exe_dir = os.path.dirname(exe_path)
+    presets_folder_path = os.path.join(exe_dir, 'presets')
     # 检查文件夹是否存在
     if os.path.exists(presets_folder_path):
         # 获取文件夹内的所有文件和子文件夹
@@ -527,6 +529,10 @@ def _get_colored(text):
 # 关键字方法区 #
 
 def save(input_session_id, input_file_content, *args):
+    """
+    保存当前会话ID,当前时间,当前预设到配置文件中
+    如果没有输入自定义会话ID,则保存当前会话ID
+    """
     try:
         session_id_save = input_session_id
         if args:
@@ -549,6 +555,10 @@ def save(input_session_id, input_file_content, *args):
         return return_err(f"保存失败！Error: {e}")
 
 def load(*args):
+    """
+    加载会话
+    不输入任何参数则加载配置文件
+    """
     if not len(args) > 2:
         _load_json_file()
         return return_err("以加载配置文件！")
@@ -572,6 +582,10 @@ def load(*args):
         return
 
 def history(*args):
+    """
+    显示历史会话列表
+    格式为: [ID] [预设] [时间]
+    """
     history_list = _load_json_file().get("sessions")
     if not history_list or len(history_list) == 0:
         return return_err("没有保存的历史会话!")
@@ -590,6 +604,11 @@ def history(*args):
     return
 
 def load_preset(input_session_id, input_file_content, *args):
+    """
+    用于加载预设
+    不输入任何参数则列出所有预设
+    预设文件需为.txt文件
+    """
     print(_get_title(input_session_id))
     intent_preset = str(args[0]) if args else None
     if intent_preset:
@@ -676,7 +695,6 @@ def config(input_session_id, input_file_content, *args):
     输入 config sessions delete [会话ID] 来删除某个会话
     输入 config pronouns 来查看已保存的所有代词
     比如 config pronouns xxx user 我 就可以把 xxx 预设下的用户的代词设置为我
-    不输入 xxx 时, 则默认更改当前预设的代词
     """
     try:
         if not args:
