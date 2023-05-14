@@ -115,7 +115,7 @@ def send_message_to_channel(channel_id:str=channel_id, message_text:str = "",ses
                 break
             _display_stream_data(response.removesuffix('_Typing…_').removesuffix("\n") + "...")
             time.sleep(message_receiving_interval)
-            
+
         # print(f"Message sent to channel {channel_id}...\nResponds:\n{response}")
         # 解锁会话
         pop_message(session_id,uniq_ID,is_new_session or wait_til_message_finish)
@@ -125,23 +125,23 @@ def send_message_to_channel(channel_id:str=channel_id, message_text:str = "",ses
         print(f"Error posting message to channel {channel_id}: {e}")
         # 解锁会话
         pop_message(session_id,uniq_ID)
-        return str(e.response['error'])
+        return return_err(e.response['error'])
     # except nonetype error
     except SlackClientError as e:
         print(f"Error posting message to channel {channel_id}: {e}")
         # 解锁会话
         pop_message(session_id,uniq_ID)
-        return str(e)
+        return return_err(e)
     except TypeError as e:
         print(f"Error posting message to channel {channel_id}: {e}")
         # 解锁会话
         pop_message(session_id,uniq_ID)
-        return str(e)
+        return return_err(" 消息发送失败，请检查USER_TOKEN等参数是否正确，或重试。")
     except Exception as e:
         print(f"Error posting message to channel {channel_id}: {e}")
         # 解锁会话
         pop_message(session_id,uniq_ID)
-        return str(e)
+        return return_err(e)
 
 
 def send_message_to_channel_API_mode(channel_id: str = channel_id, message_text: str = "", session_id: str = "g01"):
@@ -231,23 +231,23 @@ def send_message_to_channel_API_mode(channel_id: str = channel_id, message_text:
         print(f"Error posting message to channel {channel_id}: {e}")
         # 解锁会话
         pop_message(session_id, uniq_ID)
-        return str(e.response['error'])
+        return return_err(e.response['error'])
     # except nonetype error
     except SlackClientError as e:
         print(f"Error posting message to channel {channel_id}: {e}")
         # 解锁会话
         pop_message(session_id, uniq_ID)
-        return str(e)
+        return return_err(e)
     except TypeError as e:
         print(f"Error posting message to channel {channel_id}: {e}")
         # 解锁会话
         pop_message(session_id, uniq_ID)
-        return str(e)
+        return return_err(" 消息发送失败，请检查USER_TOKEN等参数是否正确，或重试。")
     except Exception as e:
         print(f"Error posting message to channel {channel_id}: {e}")
         # 解锁会话
         pop_message(session_id, uniq_ID)
-        return str(e)
+        return return_err(e)
 
 
 ### 普通方法区 ###
@@ -276,7 +276,7 @@ def send_message(channel_id,text:str,tread_ts:str = ''):
     try:
         # 使用Web客户端调用chat.postMessage方法
         result = client.chat_postMessage(
-            channel=channel_id, 
+            channel=channel_id,
             text=f'<@{claude_id}>{text}',
             thread_ts = tread_ts
         )
@@ -289,7 +289,7 @@ def send_message(channel_id,text:str,tread_ts:str = ''):
 def receive_message(channel_id,ts,oldest):
     try:
         # 使用Web客户端调用conversations.replies方法
-        result = client.conversations_replies(  ts = ts, 
+        result = client.conversations_replies(  ts = ts,
                                                 channel = channel_id,
                                                 oldest = oldest)
         return result
@@ -302,7 +302,7 @@ def update_message(channel_id,ts,text:str):
     try:
         # 使用Web客户端调用chat.update方法
         result = client.chat_update(
-            channel=channel_id, 
+            channel=channel_id,
             ts=ts,
             text=f'<@{claude_id}>{text}'
         )
@@ -433,7 +433,7 @@ def _input_config(input_content=None):
     os.system('cls')
     _save_json_file(input_content)
     return input_content
-        
+
 def _display_history(ts, show=True, with_fix=False):
     if not ts:
         return
@@ -721,6 +721,7 @@ def config(input_session_id, input_file_content, *args):
                     if input_file_content["sessions"].get(args[2]):
                         input_file_content["sessions"].pop(args[2])
                         _save_json_file(input_file_content, notice=True)
+                        _load_json_file()
                         print(f"会话 ID: {args[2]} 删除成功! 已保存.")
                         return
                     return return_err("会话ID不存在!")
@@ -730,7 +731,8 @@ def config(input_session_id, input_file_content, *args):
                         return {"message": f"当前 {args[0]} 参数: {_get_colored(input_file_content[args[0]])}"}
                     input_file_content[args[0]] = args[1]
                     _save_json_file(input_file_content, notice=True)
-                    print(f"参数 {args[0]} 修改成功! 已保存.")
+                    _load_json_file()
+                    print(f"参数 {args[0]} 已更新为: {args[1]}")
                 else:
                     if len(args) < 2:
                         return {
@@ -741,17 +743,10 @@ def config(input_session_id, input_file_content, *args):
                             return config_update_result
                         input_file_content = config_update_result
                         _save_json_file(input_file_content, notice=True)
-
+                        _load_json_file()
                         if any(key_word in ['del', 'delete'] for key_word in args):
-                            return {"message": f"参数 {'.'.join(args[:-2])}.{args[-1]} 已删除! 已保存!", 'file_content': _load_json_file()}
-                        return {"message": f"参数 {'.'.join(args[:-1])} 以更新为: {args[-1]}, 已保存!", 'file_content': _load_json_file()}
-                return
-            if args[0] == "user_token":
-                if len(args) < 2:
-                    return {"message": f"当前 {args[0]} 参数: {_get_colored(input_file_content['USER_TOKEN'])}"}
-                input_file_content["USER_TOKEN"] = args[1]
-                _save_json_file(input_file_content, notice=True)
-                print(f"参数 {args[0]} 修改成功! 已保存.")
+                            return {"message": f"参数 {'.'.join(args[:-2])}.{args[-1]} 已删除! 已保存!"}
+                        return {"message": f"参数 {'.'.join(args[:-1])} 以更新为: {args[-1]}, 已保存!"}
                 return
             else:
                 return return_err("参数错误!")
@@ -844,13 +839,19 @@ def _get_title(session_id, clear_screen=True):
     first_line = f"\033[92m\033[1m" + "# CLAUDE 青春版 #" + "\033[0m"
     second_line = "".join(_get_cmd_list(only_keys=True))
     last_line = f"\033[34m当前会话 ID\033[0m: {_get_colored(session_id)} "
-    last_line += f"\033[34m当前预设\033[0m: {_get_colored(current_preset)} " if current_preset else ""
-    last_line += f"\033[34m当前名称代词\033[0m: \033[32m用户\033[0m: \033[32m{_get_pronouns()['user']}\033[0m, \033[33m克劳德\033[0m: \033[33m{_get_pronouns()['claude']}\033[0m"
+    if current_preset:
+        last_line += f"\033[34m当前预设\033[0m: {_get_colored(current_preset)} "
+        last_line += f"\033[34m名称代词\033[0m: [\033[32m用户\033[0m: \033[32m{_get_pronouns()['user']}\033[0m] " \
+                     f"[\033[33m克劳德\033[0m: \033[33m{_get_pronouns()['claude']}\033[0m]"
     return "\n".join([first_line, second_line, last_line]) + "\n"
 
 def _get_pronouns():
-    pronouns = pronoun_presets.get(current_preset, pronoun_presets['default'] if pronoun_presets.get('default') else
-    _default_data_file()['pronouns']['default'])
+    pronouns = pronoun_presets.get(current_preset, pronoun_presets['default'] if pronoun_presets.get('default')
+                                   else _default_data_file()['pronouns']['default'])
+    if not pronouns.get('user'):
+        pronouns['user'] = _default_data_file()['pronouns']['default']['user']
+    if not pronouns.get('claude'):
+        pronouns['claude'] = _default_data_file()['pronouns']['default']['claude']
     return pronouns
 
 
@@ -893,16 +894,19 @@ if __name__ == "__main__":
         print(f"\033[33m{_get_pronouns()['claude']}\033[0m:")
         _set_stream_data(session_id, text)
         response = send_message_to_channel(channel_id=file_content.get('channel_id'), message_text=text, session_id=session_id)
-        session_exist = file_content["sessions"].get(session_id)
+        session = file_content["sessions"].get(session_id)
         if response:
-            if session_exist and session_exist.get('ts') and sessions.get(session_id):
-                pass
-            else:
+            if isinstance(response, dict) and response.get("error"):
+                print(response.get("error"))
+                _clear_stream_data()
+                continue
+            is_session_exist = session and session.get('ts') and sessions.get(session_id)
+            if not is_session_exist:
                 formatted_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
-                if not session_exist:
+                if not session:
                     file_content["sessions"][session_id] = {}
                 file_content["sessions"][session_id]['ts'] = sessions.get(session_id)
                 file_content["sessions"][session_id]['time'] = formatted_time
                 _save_json_file(file_content)
-        _display_stream_data(response)
+            _display_stream_data(response)
         _clear_stream_data()
